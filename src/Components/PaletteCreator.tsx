@@ -1,6 +1,6 @@
 import { HexColorInput, HexColorPicker } from "react-colorful";
 import ColorBlock from "./ColorBlock";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { parseColors } from "../pixellize";
 
 interface PaletteProps {
@@ -18,6 +18,14 @@ export default function PaletteCreator(props: PaletteProps) {
   const onClearColorsCLicked = () => {
     props.setPaletteColors([]);
   };
+
+  useEffect(() => {
+    localStorage.setItem("palette", JSON.stringify(props.paletteColors));
+  }, [props.paletteColors]);
+
+  useEffect(() => {
+    
+  }, []);
 
   return (
     <div className="flex flex-row gap-8 mt-6">
@@ -60,5 +68,3 @@ export default function PaletteCreator(props: PaletteProps) {
     </div>
   );
 }
-
-

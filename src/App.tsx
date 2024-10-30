@@ -9,25 +9,40 @@ function App() {
     "Drop an image to start."
   );
   const [resolution, setResolution] = useState<number>(64);
-  const [paletteColors, setPaletteColors] = useState<string[]>([
-    "#fff4e0",
-    "#8fcccb",
-    "#449489",
-    "#285763",
-    "#2f2b5c",
-    "#4b3b9c",
-    "#457cd6",
-    "#f2b63d",
-    "#d46e33",
-    "#e34262",
-    "#94353d",
-    "#57253b",
-    "#9c656c",
-    "#d1b48c",
-    "#b4ba47",
-    "#6d8c32",
-    "#2c1b2e",
-  ]);
+  const [paletteColors, setPaletteColors] = useState<string[]>(() => {
+    const savedPalette = localStorage.getItem("palette");
+    const defaultPalette = [
+      "#fff4e0",
+      "#8fcccb",
+      "#449489",
+      "#285763",
+      "#2f2b5c",
+      "#4b3b9c",
+      "#457cd6",
+      "#f2b63d",
+      "#d46e33",
+      "#e34262",
+      "#94353d",
+      "#57253b",
+      "#9c656c",
+      "#d1b48c",
+      "#b4ba47",
+      "#6d8c32",
+      "#2c1b2e",
+    ];
+
+    if (!savedPalette) return defaultPalette;
+
+    try {
+      const parsedPalette: string[] = JSON.parse(savedPalette);
+      if (Array.isArray(parsedPalette)) {
+        return parsedPalette;
+      }
+    } catch (error) {
+      console.error("Failed to parse palette from localStorage:", error);
+    }
+    return defaultPalette;
+  });
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -36,22 +51,13 @@ function App() {
       if (file.type.startsWith("image/")) {
         setImage(file);
         e.dataTransfer.clearData();
-        if (paletteColors.length == 0) return;
-        processImage(
-          file,
-          document.getElementById("pixelCanvas") as HTMLCanvasElement,
-          paletteColors,
-          resolution
-        );
       } else {
         setDragBoxText("Please drop a valid image file.");
       }
     }
   };
 
-  const onResolutionChanged = () => {};
-
-  useEffect(() => {
+  const tryProcessImage = () => {
     if (image && paletteColors.length > 0) {
       processImage(
         image,
@@ -60,7 +66,11 @@ function App() {
         resolution
       );
     }
-  }, [paletteColors]);
+  };
+
+  useEffect(() => {
+    tryProcessImage();
+  }, [image, paletteColors, resolution]);
 
   return (
     <div className="text-white text-xl flex flex-col mt-5 mx-64">
