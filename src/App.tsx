@@ -7,7 +7,25 @@ function App() {
   const [dragBoxText, setDragBoxText] = React.useState(
     "Drop an image to start."
   );
-  const [paletteColors, setPaletteColors] = useState<string[]>(["#000000"]);
+  const [paletteColors, setPaletteColors] = useState<string[]>([
+    "#fff4e0",
+    "#8fcccb",
+    "#449489",
+    "#285763",
+    "#2f2b5c",
+    "#4b3b9c",
+    "#457cd6",
+    "#f2b63d",
+    "#d46e33",
+    "#e34262",
+    "#94353d",
+    "#57253b",
+    "#9c656c",
+    "#d1b48c",
+    "#b4ba47",
+    "#6d8c32",
+    "#2c1b2e"
+  ]);
 
   const [showDimensions, setShowDimensions] = useState<boolean>(false);
 
@@ -94,7 +112,7 @@ function App() {
       </div>
 
       <div className="flex flex-col mt-8">
-        <h3 className="text-2xl">Pallette</h3>
+        <h3 className="text-2xl">Palette</h3>
         <div className="border-b-[1px] border-slate-300 mb-2"></div>
 
         <PaletteCreator
