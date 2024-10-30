@@ -1,21 +1,22 @@
 import { HexColorInput, HexColorPicker } from "react-colorful";
 import ColorBlock from "./ColorBlock";
 import { useState } from "react";
+import { parseColors } from "../pixellize";
 
 interface PaletteProps {
-  paletteChanged: (colors: string[]) => void;
+  paletteColors: string[];
+  setPaletteColors: (x: string[]) => void;
 }
 
 export default function PaletteCreator(props: PaletteProps) {
   const [color, setColor] = useState("#000000");
-  const [paletteColors, setPaletteColors] = useState<string[]>(["#000000"]);
 
   const onAddColorClicked = () => {
-    setPaletteColors([...paletteColors, color]);
+    props.setPaletteColors([...props.paletteColors, color]);
   };
 
   const onClearColorsCLicked = () => {
-    setPaletteColors([]);
+    props.setPaletteColors([]);
   };
 
   return (
@@ -36,7 +37,7 @@ export default function PaletteCreator(props: PaletteProps) {
 
       <div className="flex flex-col">
         <div className="flex flex-row flex-wrap gap-3 mb-6 mt-auto">
-          {paletteColors.map((color, index) => (
+          {props.paletteColors.map((color, index) => (
             <ColorBlock id={`cb${index}`} color={color} />
           ))}
         </div>
@@ -45,6 +46,10 @@ export default function PaletteCreator(props: PaletteProps) {
           className="px-2 py-1 w-[40rem] rounded-lg text-black"
           type="text"
           placeholder="Paste colors"
+          onChange={(e) => {
+            const colors = parseColors(e.target.value);
+            props.setPaletteColors(colors);
+          }}
         />
 
         <div className="flex flex-row gap-5 mt-1 mb-2">
@@ -55,3 +60,5 @@ export default function PaletteCreator(props: PaletteProps) {
     </div>
   );
 }
+
+

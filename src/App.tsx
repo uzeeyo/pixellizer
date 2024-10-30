@@ -7,6 +7,7 @@ function App() {
   const [dragBoxText, setDragBoxText] = React.useState(
     "Drop an image to start."
   );
+  const [paletteColors, setPaletteColors] = useState<string[]>(["#000000"]);
 
   const [showDimensions, setShowDimensions] = useState<boolean>(false);
 
@@ -19,7 +20,8 @@ function App() {
         e.dataTransfer.clearData();
         processImage(
           file,
-          document.getElementById("pixelCanvas") as HTMLCanvasElement
+          document.getElementById("pixelCanvas") as HTMLCanvasElement,
+          paletteColors
         );
       } else {
         setDragBoxText("Please drop a valid image file.");
@@ -31,7 +33,15 @@ function App() {
     setShowDimensions(!showDimensions);
   };
 
-  const onPaletteChange = (palette: string[]) => {};
+  useEffect(() => {
+    if (image && paletteColors.length > 0) {
+      processImage(
+        image,
+        document.getElementById("pixelCanvas") as HTMLCanvasElement,
+        paletteColors
+      );
+    }
+  }, [paletteColors]);
 
   return (
     <div className="text-white text-xl flex flex-col mt-5 mx-64">
@@ -86,7 +96,10 @@ function App() {
         <h3 className="text-2xl">Pallette</h3>
         <div className="border-b-[1px] border-slate-300 mb-2"></div>
 
-        <PaletteCreator paletteChanged={onPaletteChange} />
+        <PaletteCreator
+          paletteColors={paletteColors}
+          setPaletteColors={setPaletteColors}
+        />
 
         <div className="mt-8">
           <h3 className="text-2xl">Dimensions</h3>

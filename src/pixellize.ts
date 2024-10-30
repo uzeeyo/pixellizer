@@ -1,52 +1,11 @@
-const pallette = [
-  [16, 18, 28],
-  [44, 30, 49],
-  [107, 38, 67],
-  [172, 40, 71],
-  [236, 39, 63],
-  [148, 73, 58],
-  [222, 93, 58],
-  [233, 133, 55],
-  [243, 168, 51],
-  [77, 53, 51],
-  [110, 76, 48],
-  [162, 109, 63],
-  [206, 146, 72],
-  [218, 177, 99],
-  [232, 210, 130],
-  [247, 243, 183],
-  [30, 64, 68],
-  [0, 101, 84],
-  [38, 133, 76],
-  [90, 181, 82],
-  [157, 230, 78],
-  [0, 139, 139],
-  [98, 164, 119],
-  [166, 203, 150],
-  [211, 238, 211],
-  [62, 59, 101],
-  [56, 89, 179],
-  [51, 136, 222],
-  [54, 197, 244],
-  [109, 234, 214],
-  [94, 91, 140],
-  [140, 120, 165],
-  [176, 167, 184],
-  [222, 206, 237],
-  [154, 77, 118],
-  [200, 120, 175],
-  [204, 153, 255],
-  [250, 110, 121],
-  [255, 162, 172],
-  [255, 209, 213],
-  [246, 232, 224],
-  [255, 255, 255],
-];
+let palette: number[][] = [];
 
 export async function processImage(
   image: File,
-  pixelCanvas: HTMLCanvasElement
+  pixelCanvas: HTMLCanvasElement,
+  palletteColors: string[]
 ) {
+  palette = convertHexToRgb(palletteColors);
   const tempCanvas = document.createElement("canvas");
   tempCanvas.hidden = true;
   const ctx = tempCanvas.getContext("2d");
@@ -119,10 +78,10 @@ function palettize(pixels: number[][]) {
     let smallestDelta = Number.MAX_VALUE;
     let closestPaletteIndex = 0;
 
-    for (let j = 0; j < pallette.length; j++) {
-      const r = pixels[i][0] - pallette[j][0];
-      const g = pixels[i][1] - pallette[j][1];
-      const b = pixels[i][2] - pallette[j][2];
+    for (let j = 0; j < palette.length; j++) {
+      const r = pixels[i][0] - palette[j][0];
+      const g = pixels[i][1] - palette[j][1];
+      const b = pixels[i][2] - palette[j][2];
       const delta = Math.sqrt(r * r + g * g + b * b);
 
       if (delta < smallestDelta) {
@@ -131,7 +90,7 @@ function palettize(pixels: number[][]) {
       }
     }
 
-    palettizedPixels.push(pallette[closestPaletteIndex]);
+    palettizedPixels.push(palette[closestPaletteIndex]);
   }
 
   return palettizedPixels;
@@ -167,3 +126,19 @@ function createImageData(pixels: number[][], res: number) {
 
   return imageData;
 }
+
+const convertHexToRgb = (hexColors: string[]): number[][] => {
+  const parsedColors = parseColors(hexColors.join(","));
+  return parsedColors.map((hex) => {
+    const normalizedHex = hex.startsWith("#") ? hex.slice(1) : hex;
+    const bigint = parseInt(normalizedHex, 16);
+    const r = (bigint >> 16) & 255;
+    const g = (bigint >> 8) & 255;
+    const b = bigint & 255;
+    return [r, g, b];
+  });
+};
+
+export const parseColors = (input: string): string[] => {
+  return input.split(/[\s,]+/).filter(Boolean);
+};
