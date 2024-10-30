@@ -31,7 +31,9 @@ function App() {
       "#2c1b2e",
     ];
 
-    if (!savedPalette) return defaultPalette;
+    if (!savedPalette || savedPalette === "[]") {
+      return defaultPalette;
+    }
 
     try {
       const parsedPalette: string[] = JSON.parse(savedPalette);
