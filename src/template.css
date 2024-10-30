@@ -23,3 +23,20 @@ canvas {
   image-rendering: pixelated;
   image-rendering: crisp-edges;
 }
+
+.color-picker .react-colorful {
+  width: 20rem;
+}
+
+@keyframes scaleUp {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.scale-up {
+  animation: scaleUp 0.2s forwards;
+}
