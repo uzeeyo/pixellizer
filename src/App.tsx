@@ -18,6 +18,7 @@ function App() {
       if (file.type.startsWith("image/")) {
         setImage(file);
         e.dataTransfer.clearData();
+        if (paletteColors.length == 0) return;
         processImage(
           file,
           document.getElementById("pixelCanvas") as HTMLCanvasElement,
