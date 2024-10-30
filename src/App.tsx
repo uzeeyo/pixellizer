@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { processImage } from "./pixellize";
 import PaletteCreator from "./Components/PaletteCreator";
+import Dropdown from "./Components/Dropdown";
 
 function App() {
   const [image, setImage] = React.useState<File | null>(null);
   const [dragBoxText, setDragBoxText] = React.useState(
     "Drop an image to start."
   );
+  const [resolution, setResolution] = useState<number>(64);
   const [paletteColors, setPaletteColors] = useState<string[]>([
     "#fff4e0",
     "#8fcccb",
@@ -24,10 +26,8 @@ function App() {
     "#d1b48c",
     "#b4ba47",
     "#6d8c32",
-    "#2c1b2e"
+    "#2c1b2e",
   ]);
-
-  const [showDimensions, setShowDimensions] = useState<boolean>(false);
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -40,7 +40,8 @@ function App() {
         processImage(
           file,
           document.getElementById("pixelCanvas") as HTMLCanvasElement,
-          paletteColors
+          paletteColors,
+          resolution
         );
       } else {
         setDragBoxText("Please drop a valid image file.");
@@ -48,16 +49,15 @@ function App() {
     }
   };
 
-  const onDimensionsClicked = () => {
-    setShowDimensions(!showDimensions);
-  };
+  const onResolutionChanged = () => {};
 
   useEffect(() => {
     if (image && paletteColors.length > 0) {
       processImage(
         image,
         document.getElementById("pixelCanvas") as HTMLCanvasElement,
-        paletteColors
+        paletteColors,
+        resolution
       );
     }
   }, [paletteColors]);
@@ -97,7 +97,7 @@ function App() {
           {image ? (
             <img
               src={URL.createObjectURL(image)}
-              alt="image"
+              alt="Input Image"
               className="h-full w-full object-cover rounded-lg"
             />
           ) : (
@@ -123,33 +123,10 @@ function App() {
         <div className="mt-8">
           <h3 className="text-2xl">Dimensions</h3>
           <div className="border-b-[1px] border-slate-300 mb-2"></div>
-          <div className="relative bg-slate-400 w-48 py-1 rounded-xl z-0">
-            <p
-              className="text-center cursor-pointer"
-              onClick={onDimensionsClicked}
-            >
-              64 x 64
-            </p>
-
-            <div
-              className={`absolute flex flex-col bg-slate-400 w-48 rounded-b-xl ${
-                showDimensions || "hidden"
-              }`}
-            >
-              <button id="64" className="hover:bg-slate-500">
-                64 x 64
-              </button>
-              <button id="128" className="hover:bg-slate-500">
-                128 x 128
-              </button>
-              <button
-                id="256"
-                className="hover:bg-slate-500 hover:rounded-b-xl"
-              >
-                256 x 256
-              </button>
-            </div>
-          </div>
+          <Dropdown
+            selectedValue={resolution}
+            setSelectedValues={setResolution}
+          ></Dropdown>
         </div>
       </div>
       <button className="py-1 px-6 mx-auto bg-green-600 hover:bg-green-800 transition-colors duration-300 rounded-full">

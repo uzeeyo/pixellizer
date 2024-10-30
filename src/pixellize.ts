@@ -3,13 +3,13 @@ let palette: number[][] = [];
 export async function processImage(
   image: File,
   pixelCanvas: HTMLCanvasElement,
-  palletteColors: string[]
+  palletteColors: string[],
+  resolution: number
 ) {
   palette = convertHexToRgb(palletteColors);
   const tempCanvas = document.createElement("canvas");
   tempCanvas.hidden = true;
   const ctx = tempCanvas.getContext("2d");
-  const targetRes = 64;
   const img = new Image();
   img.src = URL.createObjectURL(image);
   await img.decode();
@@ -21,14 +21,14 @@ export async function processImage(
 
   const imageData = ctx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
   const allPixels = getAllPixels(imageData.data); // [r, g, b, a, r, g, b, a, ...]
-  const newPixels = pixelize(allPixels, tempCanvas.width, targetRes);
+  const newPixels = pixelize(allPixels, tempCanvas.width, resolution);
   const pallettizedPixels = palettize(newPixels);
 
-  const pixelImageData = createImageData(pallettizedPixels, targetRes);
+  const pixelImageData = createImageData(pallettizedPixels, resolution);
 
   const pixelCtx = pixelCanvas.getContext("2d");
-  pixelCanvas.width = targetRes;
-  pixelCanvas.height = targetRes;
+  pixelCanvas.width = resolution;
+  pixelCanvas.height = resolution;
   if (!pixelCtx) return;
 
   pixelCtx.imageSmoothingEnabled = false;
