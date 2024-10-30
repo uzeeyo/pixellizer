@@ -8,7 +8,17 @@ function App() {
   const [dragBoxText, setDragBoxText] = React.useState(
     "Drop an image to start."
   );
-  const [resolution, setResolution] = useState<number>(64);
+  const [resolution, setResolution] = useState<number>(() => {
+    const defaultResolution = 64;
+    const savedResoltion = localStorage.getItem("resolution");
+    if (!savedResoltion) return defaultResolution;
+    try {
+      return Number.parseInt(savedResoltion);
+    } catch (error) {
+      console.log("Failed to get saved resolution:", error);
+    }
+    return defaultResolution;
+  });
   const [paletteColors, setPaletteColors] = useState<string[]>(() => {
     const savedPalette = localStorage.getItem("palette");
     const defaultPalette = [
@@ -69,6 +79,10 @@ function App() {
       );
     }
   };
+
+  useEffect(() => {
+    localStorage.setItem("resolution", resolution.toString());
+  }, [resolution]);
 
   useEffect(() => {
     tryProcessImage();
