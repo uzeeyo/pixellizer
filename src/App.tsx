@@ -88,6 +88,10 @@ function App() {
     tryProcessImage();
   }, [image, paletteColors, resolution]);
 
+  const [titleColors, setTitleColors] = useState<string[]>(() =>
+    "Pixellizer".split("").map(() => `hsl(${Math.random() * 360}, 100%, 50%)`)
+  );
+
   return (
     <div className="text-white text-xl flex flex-col mt-5 mx-64">
       <h1 className="mx-auto text-[6rem] font-pixel my-20">
@@ -95,7 +99,7 @@ function App() {
           <span
             key={index}
             style={{
-              color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+              color: titleColors[index],
             }}
           >
             {char}
