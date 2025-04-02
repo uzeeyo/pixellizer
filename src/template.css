@@ -15,6 +15,36 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  position: relative;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, #161616 25%, transparent 25%),
+    linear-gradient(-45deg, #161616 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #161616 75%),
+    linear-gradient(-45deg, transparent 75%, #161616 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+  background-color: #1a1a1a;
+  opacity: 0.1;
+  z-index: -1;
+  animation: pixelMove 20s linear infinite;
+}
+
+@keyframes pixelMove {
+  0% {
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+  }
+  100% {
+    background-position: 20px 0, 20px 10px, 30px -10px, 10px 0px;
+  }
 }
 
 code {
@@ -44,4 +74,48 @@ canvas {
 
 .scale-up {
   animation: scaleUp 0.2s forwards;
+}
+
+/* Custom pixelated styles */
+.pixel-border {
+  border: 2px solid #333;
+  box-shadow: 4px 4px 0 #000;
+}
+
+.pixel-button {
+  background: #333;
+  border: 2px solid #444;
+  color: white;
+  padding: 8px 16px;
+  font-family: "lilliput", monospace;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.2s;
+  box-shadow: 4px 4px 0 #000;
+}
+
+.pixel-button:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 5px 5px 0 #000;
+  background: #444;
+}
+
+.pixel-button:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 #000;
+}
+
+.pixel-input {
+  background: #222;
+  border: 2px solid #333;
+  color: white;
+  padding: 8px;
+  font-family: "lilliput", monospace;
+  box-shadow: inset 2px 2px 0 #000;
+}
+
+.pixel-input:focus {
+  outline: none;
+  border-color: #444;
+  box-shadow: inset 2px 2px 0 #000, 0 0 0 2px rgba(255, 255, 255, 0.1);
 }
