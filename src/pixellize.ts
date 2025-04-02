@@ -20,7 +20,7 @@ export async function processImage(
   ctx.drawImage(img, 0, 0);
 
   const imageData = ctx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
-  const allPixels = getAllPixels(imageData.data); // [r, g, b, a, r, g, b, a, ...]
+  const allPixels = getAllPixels(imageData.data);
   const newPixels = pixelize(allPixels, tempCanvas.width, resolution);
   const pallettizedPixels = palettize(newPixels);
 
@@ -124,10 +124,10 @@ function createImageData(pixels: number[][], res: number) {
   for (let i = 0; i < pixels.length; i++) {
     const pixel = pixels[i];
     const index = i * 4;
-    imageData.data[index] = pixel[0]; // R
-    imageData.data[index + 1] = pixel[1]; // G
-    imageData.data[index + 2] = pixel[2]; // B
-    imageData.data[index + 3] = 255; // A
+    imageData.data[index] = pixel[0];
+    imageData.data[index + 1] = pixel[1];
+    imageData.data[index + 2] = pixel[2];
+    imageData.data[index + 3] = 255;
   }
 
   return imageData;
