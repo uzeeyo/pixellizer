@@ -1,6 +1,6 @@
 import { HexColorInput, HexColorPicker } from "react-colorful";
 import ColorBlock from "./ColorBlock";
-import { useEffect, useState } from "react";
+import { useEffect, useState, ChangeEvent, useRef } from "react";
 import { parseColors } from "../pixellize";
 
 interface PaletteProps {
@@ -10,13 +10,29 @@ interface PaletteProps {
 
 export default function PaletteCreator(props: PaletteProps) {
   const [color, setColor] = useState("#000000");
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const onAddColorClicked = () => {
-    props.setPaletteColors([...props.paletteColors, color]);
+    const newColors = [...props.paletteColors, color];
+    props.setPaletteColors(newColors);
+    if (inputRef.current) {
+      inputRef.current.value = newColors.join(", ");
+    }
   };
 
   const onClearColorsCLicked = () => {
     props.setPaletteColors([]);
+    if (inputRef.current) {
+      inputRef.current.value = "";
+    }
+  };
+
+  const onRemoveColor = (index: number) => {
+    const newColors = props.paletteColors.filter((_, i) => i !== index);
+    props.setPaletteColors(newColors);
+    if (inputRef.current) {
+      inputRef.current.value = newColors.join(", ");
+    }
   };
 
   useEffect(() => {
@@ -24,7 +40,10 @@ export default function PaletteCreator(props: PaletteProps) {
   }, [props.paletteColors]);
 
   useEffect(() => {
-    
+    const savedPalette = localStorage.getItem("palette");
+    if (savedPalette) {
+      props.setPaletteColors(JSON.parse(savedPalette));
+    }
   }, []);
 
   return (
@@ -46,15 +65,22 @@ export default function PaletteCreator(props: PaletteProps) {
       <div className="flex flex-col">
         <div className="flex flex-row flex-wrap gap-3 mb-6 mt-auto">
           {props.paletteColors.map((color, index) => (
-            <ColorBlock id={`cb${index}`} color={color} />
+            <ColorBlock
+              key={`cb${index}`}
+              id={`cb${index}`}
+              color={color}
+              onRemove={() => onRemoveColor(index)}
+            />
           ))}
         </div>
 
         <input
+          ref={inputRef}
           className="px-2 py-1 w-[40rem] rounded-lg text-black"
           type="text"
           placeholder="Paste colors"
-          onChange={(e) => {
+          defaultValue={props.paletteColors.join(", ")}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => {
             const colors = parseColors(e.target.value);
             props.setPaletteColors(colors);
           }}
