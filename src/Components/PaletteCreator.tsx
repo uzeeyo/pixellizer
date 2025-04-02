@@ -49,17 +49,19 @@ export default function PaletteCreator(props: PaletteProps) {
   return (
     <div className="flex flex-row gap-8 mt-6">
       <div className="flex flex-col">
-        <HexColorPicker
-          className="color-picker"
-          color={color}
-          onChange={setColor}
-        />
-        <HexColorInput
-          color={color}
-          onChange={setColor}
-          className="text-black w-40 px-2 mt-4 mx-auto rounded-lg"
-          placeholder="Hex value"
-        />
+        <div className="pixel-border p-4 rounded-lg">
+          <HexColorPicker
+            className="color-picker"
+            color={color}
+            onChange={setColor}
+          />
+          <HexColorInput
+            color={color}
+            onChange={setColor}
+            className="pixel-input w-40 px-2 mt-4 mx-auto rounded-lg"
+            placeholder="Hex value"
+          />
+        </div>
       </div>
 
       <div className="flex flex-col">
@@ -76,7 +78,7 @@ export default function PaletteCreator(props: PaletteProps) {
 
         <input
           ref={inputRef}
-          className="px-2 py-1 w-[40rem] rounded-lg text-black"
+          className="pixel-input w-[40rem] rounded-lg"
           type="text"
           placeholder="Paste colors"
           defaultValue={props.paletteColors.join(", ")}
@@ -87,8 +89,12 @@ export default function PaletteCreator(props: PaletteProps) {
         />
 
         <div className="flex flex-row gap-5 mt-1 mb-2">
-          <button onClick={onAddColorClicked}>Add</button>
-          <button onClick={onClearColorsCLicked}>Clear</button>
+          <button className="pixel-button" onClick={onAddColorClicked}>
+            Add
+          </button>
+          <button className="pixel-button" onClick={onClearColorsCLicked}>
+            Clear
+          </button>
         </div>
       </div>
     </div>
