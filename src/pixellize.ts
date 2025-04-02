@@ -45,15 +45,21 @@ function getAllPixels(pixels: Uint8ClampedArray) {
 
 function pixelize(pixels: number[][], originalRes: number, targetRes: number) {
   const newPixels = [];
-  const blockSize = Math.floor(originalRes / targetRes);
+  const blockSize = originalRes / targetRes;
 
   for (let blockY = 0; blockY < targetRes; blockY++) {
     for (let blockX = 0; blockX < targetRes; blockX++) {
       const pixelsInBlock = [];
       const blockStartY = Math.floor(blockY * blockSize);
-      const blockEndY = Math.floor(blockStartY + blockSize);
+      const blockEndY = Math.min(
+        Math.ceil((blockY + 1) * blockSize),
+        originalRes
+      );
       const blockStartX = Math.floor(blockX * blockSize);
-      const blockEndX = Math.floor(blockStartX + blockSize);
+      const blockEndX = Math.min(
+        Math.ceil((blockX + 1) * blockSize),
+        originalRes
+      );
 
       for (let y = blockStartY; y < blockEndY; y++) {
         for (let x = blockStartX; x < blockEndX; x++) {
