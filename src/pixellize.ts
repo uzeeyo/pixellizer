@@ -13,11 +13,16 @@ export async function processImage(
   const img = new Image();
   img.src = URL.createObjectURL(image);
   await img.decode();
-  tempCanvas.width = img.width;
-  tempCanvas.height = img.height;
+
+  const size = Math.min(img.width, img.height);
+  const x = (img.width - size) / 2;
+  const y = (img.height - size) / 2;
+
+  tempCanvas.width = size;
+  tempCanvas.height = size;
   if (!ctx) return;
 
-  ctx.drawImage(img, 0, 0);
+  ctx.drawImage(img, x, y, size, size, 0, 0, size, size);
 
   const imageData = ctx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
   const allPixels = getAllPixels(imageData.data);
