@@ -4,11 +4,14 @@ import { useEffect, useState, ChangeEvent, useRef } from "react";
 import { parseColors } from "../pixellize";
 import SavePaletteDialog from "./SavePaletteDialog";
 import { Palette, SavedPalettes } from "../App";
+import Dropdown from "./Dropdown";
 
 interface PaletteProps {
   activePalette: Palette;
   setActivePallete: (x: Palette) => void;
   setSaveDialogVisible: (visible: boolean) => void;
+  selectedResolution: number;
+  setSelectedResolution: (resolution: number) => void;
 }
 
 
@@ -66,7 +69,7 @@ export default function PaletteCreator(props: PaletteProps) {
 
   return (
     <div className="flex flex-row gap-8 mt-6">
-      <div className="flex flex-col">
+      <div className="flex flex-col items-center gap-4">
         <div className="pixel-border p-4 rounded-lg">
           <HexColorPicker
             className="color-picker"
@@ -80,6 +83,10 @@ export default function PaletteCreator(props: PaletteProps) {
             placeholder="Hex value"
           />
         </div>
+        <Dropdown
+          selectedValue={props.selectedResolution}
+          setSelectedValues={props.setSelectedResolution}
+        ></Dropdown>
       </div>
 
       <div className="flex flex-col">

@@ -203,16 +203,9 @@ function App() {
             activePalette={activePalette}
             setActivePallete={setActivePalette}
             setSaveDialogVisible={setSaveDialogVisible}
+            selectedResolution={resolution}
+            setSelectedResolution={setResolution}
           />
-
-          <div className="mt-8">
-            <h3 className="text-2xl">Dimensions</h3>
-            <div className="border-b-[1px] border-slate-300 mb-2"></div>
-            <Dropdown
-              selectedValue={resolution}
-              setSelectedValues={setResolution}
-            ></Dropdown>
-          </div>
         </div>
 
         <SavedPalettePicker

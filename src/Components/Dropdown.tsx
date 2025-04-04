@@ -20,13 +20,18 @@ export default function Dropdown(props: DropdownProps) {
   };
 
   return (
-    <div className="relative bg-slate-400 w-48 py-1 rounded-xl z-0">
-      <p className="text-center cursor-pointer" onClick={onDropdownClicked}>
-        {`${props.selectedValue}x${props.selectedValue}`}
-      </p>
+    <div className="relative w-48">
+      <div className="bg-[#2f2f2f] py-1 pixel-border">
+        <p
+          className="text-center cursor-pointer select-none"
+          onClick={onDropdownClicked}
+        >
+          {`${props.selectedValue}x${props.selectedValue}`}
+        </p>
+      </div>
 
       {showItems && (
-        <div className="absolute flex flex-col bg-slate-400 w-48 rounded-b-xl overflow-hidden">
+        <div className="absolute top-full left-0 flex flex-col bg-[#2f2f2f] w-48 overflow-hidden pixel-border">
           {[32, 64, 128, 256].map((v) => (
             <DropdownItem value={v} itemClicked={onItemClicked} />
           ))}
