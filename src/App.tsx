@@ -2,9 +2,62 @@ import React, { useEffect, useState } from "react";
 import { processImage } from "./pixellize";
 import PaletteCreator from "./Components/PaletteCreator";
 import Dropdown from "./Components/Dropdown";
+import SavePaletteDialog from "./Components/SavePaletteDialog";
+import SavedPalettePicker from "./Components/SavedPalettePicker";
+
+export interface Palette {
+  name: string;
+  colors: string[];
+}
+
+export interface SavedPalettes {
+  palettes: Palette[];
+}
+
+function getDefaultPalette(): Palette {
+  const defaultColors = [
+    "#fff4e0",
+    "#8fcccb",
+    "#449489",
+    "#285763",
+    "#2f2b5c",
+    "#4b3b9c",
+    "#457cd6",
+    "#f2b63d",
+    "#d46e33",
+    "#e34262",
+    "#94353d",
+    "#57253b",
+    "#9c656c",
+    "#d1b48c",
+    "#b4ba47",
+    "#6d8c32",
+    "#2c1b2e",
+  ];
+
+  return {
+    name: "Untitled",
+    colors: defaultColors,
+  } as Palette;
+}
 
 function App() {
   const [image, setImage] = React.useState<File | null>(null);
+  const [titleColors] = useState<string[]>(() =>
+    "Pixellizer".split("").map(() => `hsl(${Math.random() * 360}, 100%, 50%)`)
+  );
+  const [saveDialogVisible, setSaveDialogVisible] = useState(false);
+  const [savedPalettes, setSavedPalettes] = useState<SavedPalettes>(() => {
+    const p = localStorage.getItem("savedPalettes");
+    if (!p) {
+      return { palettes: [] };
+    }
+    const parsed = JSON.parse(p) as SavedPalettes;
+    if (parsed == undefined) {
+      return { palettes: [] };
+    }
+    return parsed;
+  });
   const [dragBoxText, setDragBoxText] = React.useState(
     "Drop an image to start."
   );
@@ -19,42 +72,34 @@ function App() {
     }
     return defaultResolution;
   });
-  const [paletteColors, setPaletteColors] = useState<string[]>(() => {
-    const savedPalette = localStorage.getItem("palette");
-    const defaultPalette = [
-      "#fff4e0",
-      "#8fcccb",
-      "#449489",
-      "#285763",
-      "#2f2b5c",
-      "#4b3b9c",
-      "#457cd6",
-      "#f2b63d",
-      "#d46e33",
-      "#e34262",
-      "#94353d",
-      "#57253b",
-      "#9c656c",
-      "#d1b48c",
-      "#b4ba47",
-      "#6d8c32",
-      "#2c1b2e",
-    ];
-
-    if (!savedPalette || savedPalette === "[]") {
-      return defaultPalette;
+  const [activePalette, setActivePalette] = useState<Palette>(() => {
+    const p = localStorage.getItem("activePalette");
+    if (!p) {
+      return getDefaultPalette();
     }
 
-    try {
-      const parsedPalette: string[] = JSON.parse(savedPalette);
-      if (Array.isArray(parsedPalette)) {
-        return parsedPalette;
-      }
-    } catch (error) {
-      console.error("Failed to parse palette from localStorage:", error);
+    const parsedPalette = JSON.parse(p) as Palette;
+    if (parsedPalette == undefined) {
+      return getDefaultPalette();
     }
-    return defaultPalette;
+    if (parsedPalette.colors != null && parsedPalette.colors.length > 0) {
+      return parsedPalette;
+    }
+    return getDefaultPalette();
   });
+
+  const savePalettes = () => {
+    const newPalettes = {
+      palettes: [...savedPalettes.palettes, activePalette],
+    };
+    setSavedPalettes(newPalettes);
+    localStorage.setItem("savedPalettes", JSON.stringify(newPalettes));
+  };
+
+  const onPaletteChange = (palette: Palette) => {
+    setActivePalette(palette);
+    localStorage.setItem("activePalette", JSON.stringify(palette));
+  };
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -70,11 +115,11 @@ function App() {
   };
 
   const tryProcessImage = () => {
-    if (image && paletteColors.length > 0) {
+    if (image && activePalette.colors.length > 0) {
       processImage(
         image,
         document.getElementById("pixelCanvas") as HTMLCanvasElement,
-        paletteColors,
+        activePalette.colors,
         resolution
       );
     }
@@ -86,19 +131,22 @@ function App() {
 
   useEffect(() => {
     tryProcessImage();
-  }, [image, paletteColors, resolution]);
-
-  const [titleColors, setTitleColors] = useState<string[]>(() =>
-    "Pixellizer".split("").map(() => `hsl(${Math.random() * 360}, 100%, 50%)`)
-  );
+  }, [image, activePalette, resolution]);
 
   return (
     <div className="min-h-screen bg-[#161616] relative overflow-hidden font-pixel">
+      <SavePaletteDialog
+        activePalette={activePalette}
+        setActivePalette={setActivePalette}
+        save={savePalettes}
+        visible={saveDialogVisible}
+        setVisible={setSaveDialogVisible}
+      />
+      1
       <div className="fixed inset-0 z-0">
         <div className="absolute inset-0 bg-[#161616] opacity-90"></div>
         <div className="absolute inset-0 bg-[linear-gradient(45deg,#161616_25%,transparent_25%),linear-gradient(-45deg,#161616_25%,transparent_25%),linear-gradient(45deg,transparent_75%,#161616_75%),linear-gradient(-45deg,transparent_75%,#161616_75%)] bg-[length:20px_20px] animate-pixelMove"></div>
       </div>
-
       <div className="relative z-10 text-white text-xl flex flex-col mt-5 mx-64">
         <h1 className="mx-auto text-[6rem] font-pixel my-20">
           {"Pixellizer".split("").map((char, index) => (
@@ -152,8 +200,9 @@ function App() {
           <div className="border-b-[1px] border-slate-300 mb-2"></div>
 
           <PaletteCreator
-            paletteColors={paletteColors}
-            setPaletteColors={setPaletteColors}
+            activePalette={activePalette}
+            setActivePallete={setActivePalette}
+            setSaveDialogVisible={setSaveDialogVisible}
           />
 
           <div className="mt-8">
@@ -166,6 +215,10 @@ function App() {
           </div>
         </div>
 
+        <SavedPalettePicker
+          savedPalettes={savedPalettes}
+          onPaletteChange={onPaletteChange}
+        />
 
         <div className="flex flex-col mx-auto w-[40rem]">
           <h3 className="mt-20 mb-4 text-5xl text-center">About</h3>
