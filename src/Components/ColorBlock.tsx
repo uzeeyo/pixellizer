@@ -9,7 +9,7 @@ export default function ColorBlock(props: ColorBlockProps) {
     <div className="relative group">
       <div
         id={props.id}
-        className="w-10 h-10 rounded-lg scale-up pixel-border"
+        className="w-10 h-10 scale-up pixel-border"
         style={{ backgroundColor: props.color }}
       ></div>
       <button
