@@ -2,49 +2,67 @@ import { HexColorInput, HexColorPicker } from "react-colorful";
 import ColorBlock from "./ColorBlock";
 import { useEffect, useState, ChangeEvent, useRef } from "react";
 import { parseColors } from "../pixellize";
+import SavePaletteDialog from "./SavePaletteDialog";
+import { Palette, SavedPalettes } from "../App";
 
 interface PaletteProps {
-  paletteColors: string[];
-  setPaletteColors: (x: string[]) => void;
+  activePalette: Palette;
+  setActivePallete: (x: Palette) => void;
+  setSaveDialogVisible: (visible: boolean) => void;
 }
+
 
 export default function PaletteCreator(props: PaletteProps) {
   const [color, setColor] = useState("#000000");
   const inputRef = useRef<HTMLInputElement>(null);
 
   const onAddColorClicked = () => {
-    const newColors = [...props.paletteColors, color];
-    props.setPaletteColors(newColors);
+    const newColors = [...props.activePalette.colors, color];
+    props.setActivePallete({
+      name: props.activePalette.name,
+      colors: newColors,
+    });
     if (inputRef.current) {
       inputRef.current.value = newColors.join(", ");
     }
   };
 
   const onClearColorsCLicked = () => {
-    props.setPaletteColors([]);
+    props.setActivePallete({
+      name: props.activePalette.name,
+      colors: [],
+    });
     if (inputRef.current) {
       inputRef.current.value = "";
     }
   };
 
   const onRemoveColor = (index: number) => {
-    const newColors = props.paletteColors.filter((_, i) => i !== index);
-    props.setPaletteColors(newColors);
+    const newColors = props.activePalette.colors.filter((_, i) => i !== index);
+    props.setActivePallete({
+      name: props.activePalette.name,
+      colors: newColors,
+    });
     if (inputRef.current) {
       inputRef.current.value = newColors.join(", ");
     }
   };
 
-  useEffect(() => {
-    localStorage.setItem("palette", JSON.stringify(props.paletteColors));
-  }, [props.paletteColors]);
+  const onSavePaletteCLicked = () => {
+    props.setSaveDialogVisible(true);
+  };
+
 
   useEffect(() => {
-    const savedPalette = localStorage.getItem("palette");
-    if (savedPalette) {
-      props.setPaletteColors(JSON.parse(savedPalette));
+    localStorage.setItem("activePalette", JSON.stringify(props.activePalette));
+  }, [props.activePalette]);
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.value = props.activePalette.colors.join(", ");
     }
-  }, []);
+  }, [props.activePalette]);
+
 
   return (
     <div className="flex flex-row gap-8 mt-6">
@@ -66,7 +84,7 @@ export default function PaletteCreator(props: PaletteProps) {
 
       <div className="flex flex-col">
         <div className="flex flex-row flex-wrap gap-3 mb-6 mt-auto">
-          {props.paletteColors.map((color, index) => (
+          {props.activePalette.colors.map((color, index) => (
             <ColorBlock
               key={`cb${index}`}
               id={`cb${index}`}
@@ -81,19 +99,25 @@ export default function PaletteCreator(props: PaletteProps) {
           className="pixel-input w-[40rem] rounded-lg"
           type="text"
           placeholder="Paste colors"
-          defaultValue={props.paletteColors.join(", ")}
+          defaultValue={props.activePalette.colors.join(", ")}
           onChange={(e: ChangeEvent<HTMLInputElement>) => {
             const colors = parseColors(e.target.value);
-            props.setPaletteColors(colors);
+            props.setActivePallete({
+              name: props.activePalette.name,
+              colors: colors,
+            });
           }}
         />
 
-        <div className="flex flex-row gap-5 mt-1 mb-2">
+        <div className="flex flex-row gap-4 mt-4 mb-2">
           <button className="pixel-button" onClick={onAddColorClicked}>
             Add
           </button>
           <button className="pixel-button" onClick={onClearColorsCLicked}>
             Clear
+          </button>
+          <button className="pixel-button" onClick={onSavePaletteCLicked}>
+            Save
           </button>
         </div>
       </div>
