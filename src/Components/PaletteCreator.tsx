@@ -103,7 +103,7 @@ export default function PaletteCreator(props: PaletteProps) {
 
         <input
           ref={inputRef}
-          className="pixel-input w-[40rem] rounded-lg"
+          className="pixel-input w-full rounded-lg"
           type="text"
           placeholder="Paste colors"
           defaultValue={props.activePalette.colors.join(", ")}
