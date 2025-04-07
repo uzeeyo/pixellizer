@@ -68,7 +68,7 @@ export default function PaletteCreator(props: PaletteProps) {
 
 
   return (
-    <div className="flex flex-row gap-8 mt-6">
+    <div className="flex flex-col lg:flex-row gap-8 mt-6">
       <div className="flex flex-col items-center gap-4">
         <div className="pixel-border p-4 rounded-lg">
           <HexColorPicker

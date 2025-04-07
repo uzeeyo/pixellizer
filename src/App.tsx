@@ -142,13 +142,8 @@ function App() {
         visible={saveDialogVisible}
         setVisible={setSaveDialogVisible}
       />
-      1
-      <div className="fixed inset-0 z-0">
-        <div className="absolute inset-0 bg-[#161616] opacity-90"></div>
-        <div className="absolute inset-0 bg-[linear-gradient(45deg,#161616_25%,transparent_25%),linear-gradient(-45deg,#161616_25%,transparent_25%),linear-gradient(45deg,transparent_75%,#161616_75%),linear-gradient(-45deg,transparent_75%,#161616_75%)] bg-[length:20px_20px] animate-pixelMove"></div>
-      </div>
-      <div className="relative z-10 text-white text-xl flex flex-col mt-5 mx-64">
-        <h1 className="mx-auto text-[6rem] font-pixel my-20">
+      <div className="relative z-10 text-white text-xl flex flex-col mt-5 mx-4 lg:mx-64">
+        <h1 className="mx-auto text-[3rem] md:text-[4rem] lg:text-[6rem] font-pixel mt-20 mb-10 lg:mb-20">
           {"Pixellizer".split("").map((char, index) => (
             <span
               key={index}
@@ -163,7 +158,7 @@ function App() {
 
         <div className="flex flex-row gap-5 justify-center">
           <div
-            className="h-[256px] w-[256px]  bg-slate-400 relative pixel-border text-center"
+            className="h-[128px] lg:h-[256px] w-[128px] lg:w-[256px] bg-slate-400 relative pixel-border text-center"
             onDrop={handleDrop}
             onDragOver={(e) => {
               e.preventDefault();
@@ -176,21 +171,21 @@ function App() {
           >
             <div
               hidden={image != null}
-              className="absolute inset-1 border-2 border-dashed border-white rounded-lg pointer-events-none"
+              className="absolute inset-1 border-2 border-dashed border-white pointer-events-none"
             ></div>
             {image ? (
               <img
                 src={URL.createObjectURL(image)}
                 alt="Input Image"
-                className="h-full w-full object-cover rounded-lg"
+                className="h-full w-full object-cover"
               />
             ) : (
-              <p className="text-black text-2xl flex items-center justify-center h-full">
+              <p className="text-black text-lg lg:text-2xl flex items-center justify-center h-full">
                 {dragBoxText}
               </p>
             )}
           </div>
-          <div className="h-[256px] w-[256px] bg-slate-400 pixel-border">
+          <div className="h-[128px] lg:h-[256px] w-[128px] lg:w-[256px] bg-slate-400 pixel-border">
             <canvas id="pixelCanvas" className="h-full w-full"></canvas>
           </div>
         </div>
@@ -213,10 +208,10 @@ function App() {
           onPaletteChange={onPaletteChange}
         />
 
-        <div className="flex flex-col mx-auto w-[40rem]">
+        <div className="flex flex-col mx-auto lg:w-[40rem]">
           <h3 className="mt-20 mb-4 text-5xl text-center">About</h3>
           <div className="border-b-[1px] border-slate-300 mb-2"></div>
-          <p className="">
+          <p className="text-md lg:text-lg">
             Pixellizer is a free tool to convert existing art into pixel art
             while conforming to a specified palette. If you found it useful you
             could consider supporting me.

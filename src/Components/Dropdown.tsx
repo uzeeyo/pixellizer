@@ -20,7 +20,7 @@ export default function Dropdown(props: DropdownProps) {
   };
 
   return (
-    <div className="relative w-48">
+    <div className="relative w-48 z-20">
       <div className="bg-[#2f2f2f] py-1 pixel-border">
         <p
           className="text-center cursor-pointer select-none"

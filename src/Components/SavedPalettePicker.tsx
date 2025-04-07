@@ -37,7 +37,7 @@ function SavedPalettePicker(props: SavedPalettePickerProps) {
     <div className="mt-10">
       <h3 className="text-2xl">Saved Palettes</h3>
       <div className="border-b-[1px] border-slate-300 mb-4"></div>
-      <div className="flex flex-row gap-4">
+      <div className="flex flex-row gap-4 flex-wrap">
         {props.savedPalettes.palettes.map((palette) => (
           <SavedPaletteBlock
             key={palette.name}
