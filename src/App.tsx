@@ -61,6 +61,7 @@ function App() {
   const [dragBoxText, setDragBoxText] = React.useState(
     "Drop an image to start."
   );
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
   const [resolution, setResolution] = useState<number>(() => {
     const defaultResolution = 64;
     const savedResoltion = localStorage.getItem("resolution");
@@ -99,6 +100,21 @@ function App() {
   const onPaletteChange = (palette: Palette) => {
     setActivePalette(palette);
     localStorage.setItem("activePalette", JSON.stringify(palette));
+  };
+
+  const handleClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      if (file.type.startsWith("image/")) {
+        setImage(file);
+      } else {
+        setDragBoxText("Please select a valid image file.");
+      }
+    }
   };
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
@@ -158,7 +174,8 @@ function App() {
 
         <div className="flex flex-row gap-5 justify-center">
           <div
-            className="h-[128px] lg:h-[256px] w-[128px] lg:w-[256px] bg-slate-400 relative pixel-border text-center"
+            className="h-[128px] lg:h-[256px] w-[128px] lg:w-[256px] bg-slate-400 relative pixel-border text-center cursor-pointer"
+            onClick={handleClick}
             onDrop={handleDrop}
             onDragOver={(e) => {
               e.preventDefault();
@@ -169,6 +186,13 @@ function App() {
               setDragBoxText("Drop an image to start.");
             }}
           >
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              accept="image/*"
+              className="hidden"
+            />
             <div
               hidden={image != null}
               className="absolute inset-1 border-2 border-dashed border-white pointer-events-none"
