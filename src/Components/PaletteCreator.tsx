@@ -90,7 +90,7 @@ export default function PaletteCreator(props: PaletteProps) {
       </div>
 
       <div className="flex flex-col">
-        <div className="flex flex-row flex-wrap gap-3 mb-6 mt-auto">
+        <div className="flex flex-row flex-wrap justify-center lg:justify-start gap-3 mb-6 mt-auto">
           {props.activePalette.colors.map((color, index) => (
             <ColorBlock
               key={`cb${index}`}
