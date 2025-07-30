@@ -1,14 +1,14 @@
 {
   "files": {
-    "main.css": "/pixellizer/static/css/main.f5dd597a.css",
-    "main.js": "/pixellizer/static/js/main.a032dcaa.js",
-    "static/media/lilliput-steps.regular.otf": "/pixellizer/static/media/lilliput-steps.regular.43adbecfb507e601822e.otf",
-    "index.html": "/pixellizer/index.html",
-    "main.f5dd597a.css.map": "/pixellizer/static/css/main.f5dd597a.css.map",
-    "main.a032dcaa.js.map": "/pixellizer/static/js/main.a032dcaa.js.map"
+    "main.css": "/static/css/main.036bb95d.css",
+    "main.js": "/static/js/main.35184d24.js",
+    "static/media/lilliput-steps.regular.otf": "/static/media/lilliput-steps.regular.43adbecfb507e601822e.otf",
+    "index.html": "/index.html",
+    "main.036bb95d.css.map": "/static/css/main.036bb95d.css.map",
+    "main.35184d24.js.map": "/static/js/main.35184d24.js.map"
   },
   "entrypoints": [
-    "static/css/main.f5dd597a.css",
-    "static/js/main.a032dcaa.js"
+    "static/css/main.036bb95d.css",
+    "static/js/main.35184d24.js"
   ]
 }
