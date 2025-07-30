@@ -1,7 +1,7 @@
 {
   "name": "pixellizer",
   "version": "0.2.0",
-  "homepage": "https://uzeeyo.github.io/pixellizer",
+  "homepage": "https://pixellizer.com",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
